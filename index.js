@@ -58,6 +58,55 @@ function countNbors(board, nbors, r0, c0) {
     }
     console.log(nbors);
 }
+//  switch (currentBoard[r][c]) {
+//    case DEAD:
+//      if (nbors[ALIVE] === 3) {
+//        next[r][c] = ALIVE
+//      } else {
+//        next[r][c] = DEAD
+//      }
+//      break
+//    case ALIVE:
+//      if (nbors[ALIVE] === 2 || nbors[ALIVE] === 3) {
+//        next[r][c] = ALIVE
+//      } else {
+//        next[r][c] = DEAD
+//      }
+//      break
+//  }
+// Encoding above conditions into table
+// 2 states modelled into 2 dimensions
+const GoL = [
+    // col index -> DEAD
+    // row index -> ALIVE
+    // 1 in the table:
+    // *NOTE: since index has 0,
+    // row & col have 1 extra cell
+    // 0 DEAD
+    [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ],
+    // 1 ALIVE
+    [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ],
+];
 function computeNextBoard(states, currentBoard, next) {
     // Value of states correspond to their index in nbors
     const DEAD = 0;
@@ -68,25 +117,8 @@ function computeNextBoard(states, currentBoard, next) {
     for (let r = 0; r < BOARD_ROWS; r++) {
         for (let c = 0; c < BOARD_COLS; c++) {
             countNbors(currentBoard, nbors, r, c);
-            // next state conditionals to-be changed into a look-up table
-            switch (currentBoard[r][c]) {
-                case DEAD:
-                    if (nbors[ALIVE] === 3) {
-                        next[r][c] = ALIVE;
-                    }
-                    else {
-                        next[r][c] = DEAD;
-                    }
-                    break;
-                case ALIVE:
-                    if (nbors[ALIVE] === 2 || nbors[ALIVE] === 3) {
-                        next[r][c] = ALIVE;
-                    }
-                    else {
-                        next[r][c] = DEAD;
-                    }
-                    break;
-            }
+            // Gives next state: 1 | 0
+            next[r][c] = GoL[currentBoard[r][c]][nbors[DEAD]][nbors[ALIVE]];
         }
     }
 }
