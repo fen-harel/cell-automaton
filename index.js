@@ -58,6 +58,15 @@ function countNbors(board, nbors, r0, c0) {
     }
     console.log(nbors);
 }
+const Seeds = [
+    {
+        "62": 1,
+        default: 0,
+    },
+    {
+        default: 0,
+    },
+];
 const GoL = [
     {
         "53": 1,
@@ -69,18 +78,18 @@ const GoL = [
         default: 0,
     },
 ];
-function computeNextBoard(states, currentBoard, next) {
+function computeNextBoard(automaton, currentBoard, next) {
     // Value of states correspond to their index in nbors
     const DEAD = 0;
     const ALIVE = 1;
     // initiates array -> []
     // value of the cell is its state
-    const nbors = new Array().fill(0);
+    const nbors = new Array(automaton.length).fill(0);
     for (let r = 0; r < BOARD_ROWS; r++) {
         for (let c = 0; c < BOARD_COLS; c++) {
             countNbors(currentBoard, nbors, r, c);
             // Gives next state: 1 | 0
-            const transition = GoL[currentBoard[r][c]];
+            const transition = automaton[currentBoard[r][c]];
             next[r][c] = transition[nbors.join("")];
             if (next[r][c] === undefined) {
                 next[r][c] = transition["default"];
@@ -116,7 +125,8 @@ app.addEventListener("click", e => {
 });
 next.addEventListener("click", e => {
     console.log("NEXT");
-    computeNextBoard(2, currentBoard, nextBoard);
+    // computeNextBoard(GoL, currentBoard, nextBoard)
+    computeNextBoard(Seeds, currentBoard, nextBoard);
     [currentBoard, nextBoard] = [nextBoard, currentBoard];
     render(ctx, currentBoard);
 });
